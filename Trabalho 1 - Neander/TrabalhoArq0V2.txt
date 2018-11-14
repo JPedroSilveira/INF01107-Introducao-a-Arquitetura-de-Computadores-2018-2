@@ -1,0 +1,291 @@
+Nome: João Pedro Silveira e Silva
+Matrícula: 00303397
+//=================================================
+//[Zera o somatório]
+00  20 LDA
+01  85 Endereço
+02  10 STA
+03  87 Endereço
+//=================================================
+//[Direciona para a "função" principal]
+04  80 JMP
+05  90 Endereço
+//=================================================
+//=================================================
+//DIVISOR
+//Dado um valor y(1C) e um valor x(AC) 
+// e calcula se x é divisivel por y
+//[Endereço retorno = 1E]
+//[Retorno: 
+// AC zero é divisor, caso contrário não é divisor]
+//[Inicio = 1F]
+//=================================================  
+1B  00  Valor x
+1C  00  Entrada y 
+//=================================================
+[Retorno]
+1D  80  JMP     
+1E  00  Endereço de retorno
+//<================================================
+//[Salva o valor de AC em 1B(x)]
+1F  10  STA
+20  1B  Endereço
+//=================================================
+//[Subtrai 1C(y) de 1B(x)]
+21  20  LDA
+22  1C  Endereço
+23  60  NOT
+24  30  ADD
+25  83  Endereço
+26  30  ADD
+27  1B  Endereço
+//<================================================
+//[Verifica se o resultado é zero, é divisor]
+28  A0  JZ
+//<================================================
+//[Finaliza e retorna]
+29  1D  Endereço
+//<================================================
+//[Verifica se é negativo, não é divisor]
+2A  90  JN
+//<================================================
+//[Finaliza e retorna]
+2B  1D  Endereço
+===================================================
+[Se o resultado é positivo, continua]
+2C  80  JMP
+2D  1F  Endereço
+===================================================
+===================================================
+===================================================
+//MULTIPLICAÇÃO 
+//Dado um valor de x(30) e um valor de y(AC) 
+//realiza a multiplicação
+//[Endereço retorno = 36]
+//[Retorno = AC]
+//[Inicio = 37]
+===================================================     
+30  00 Entrada x 
+31  00 Somador
+32  00 Contador
+===================================================
+//[Retorno]
+33  20  LDA
+34  31  Passa 31(Somador) para o AC
+35  80  JMP   
+36  00  Endereço de retorno
+//<================================================
+//[Se o AC(y) igual a zero, retorna ele]
+37  A0  JZ
+38  35  Endereço
+//<================================================
+//[Salva AC(y) em 32(Contador)]
+39  10  STA	
+3A  32  Endereço
+//=================================================
+//[Salva 30(x) em 31(Somador)]
+3B  20  LDA
+3C  30  ADD
+3D  10  STA
+3E  31  Endereço
+//=================================================
+//[Soma -1 ao 32(Contador) e salva em 32(Contador)]
+3F  20  LDA
+40  32  Endereço
+41  30  ADD
+42  84  Endereço
+43  10  STA
+44  32  Endereço
+//<================================================
+//[Se o AC(Contador) igual a zero, retorna]
+45  A0  JZ
+46  33  Endereço
+//=================================================
+//[Soma 31(Somador) com 30(x) e salva no 31(Somador)] 
+47  20  LDA   
+48  31  Endereço   
+49  30  ADD   
+4A  30  Endereço
+4B  10  STA
+4C  31  Endereço
+//=================================================                  
+//[Continua somatório]
+4D  80  JMP
+4E  3F  Endereço
+//=================================================            
+//=================================================
+//POTÊNCIA
+//Dado um valor x(50) e um valor y(AC) 
+// e calcula a potência de x elevador a y
+//[Endereço retorno = 5A]
+//[Retorno = AC]
+//[Inicio = 5B]
+//=================================================
+50  00  Entrada x
+51  00  Resultado
+52  00  Contador
+//=================================================
+//[Retorno]
+53  20  LDA
+54  83  Endereço do valor 01
+55  80  JMP 
+56  59  Endereço
+57  20  LDA
+58  51  Endereço do resultado
+59  80  JMP
+5A  00  Endereço retorno
+//<================================================
+//[Verifica se a potência é zero e retorna 1]
+5B  A0  JZ
+5C  53  Endereço
+//=================================================
+//[Salva AC(y) em 52(Contador)]
+5D  10  STA
+5E  52  Endereço
+//=================================================
+//[Salva 50(x) em 51(Resultado)]
+5F  20  LDA
+60  50  Endereço
+61  10  STA
+62  51  Endereço
+//===================================================
+//[Salva 52(Contador) em AC)]
+63  20  LDA
+64  52  Endereço
+//<================================================
+//[Salva AC(y) somado a 84(-1) em 52(Contador)]
+65  30  ADD
+66  84  Endereço
+67  10  STA
+68  52  Endereço
+//=================================================
+//[Verifica se o 52(Contador) é zero, retorna]
+69  A0  JZ
+6A  57  Endereço
+//=================================================
+//[Chama MULTIPLICAÇÃO com 51(Resultado) e 50(x)]
+6B  20  LDA 
+6C  51  Endereço
+6D  10  STA
+6E  30  Endereço
+6F  20  LDA
+70  7D  Endereço
+71  10  STA
+72  36  Endereço
+73  20  LDA
+74  50  Endereço
+75  80  JMP
+76  37  Endereço
+//=================================================
+//[Recebe retorno(AC) da MULTIPLICAÇÃO e salva 
+// em 51(Resultado)]
+77  10  STA
+78  51  Endereço
+//=================================================
+//[Salva 52(Contador) em AC e retorna]
+79  20  LDA
+7A  52  Endereço
+7B  80  JMP
+7C  65  Endereço
+//=================================================
+//[Endereço retorno para MULTIPLICAÇÃO]
+7D  77  Endereço
+//=================================================
+//=================================================
+[Variáveis globais]
+80  00 n     
+81  00 x    
+82  00 Resultado    
+83  01 1    
+84  FF -1
+85  00 0
+86  00 Contador
+87  00 Somatorio
+88  A0 Endereço de retorno DIVISOR
+89  B4 Endereço de retorno POTENCIA
+//===================================================
+//===================================================
+//PRINCIPAL
+//Calcula o valor da função 
+//“soma dos divisores positivos” 
+//=================================================
+//[Salva o valor de 83(01) em 86(Contador)]
+90 20  LDA
+91 83  Endereço
+92 10  STA
+93 86  Endereço
+//=================================================
+//[Chama a "função" DIVISOR]
+94 20  LDA
+95 86  Endereço
+96 10  STA
+97 1C  Endereço
+98 20  LDA
+99 88  Endereço
+9A 10  STA
+9B 1E  Endereço
+9C 20  LDA
+9D 80  Endereço
+9E 80  JMP 
+9F 1F  Endereço
+//=================================================
+//[Verifica se o resultado de DIVISOR é zero]
+A0 A0  JZ
+A1 A8  Endereço
+//=================================================
+//[Se não for, soma 83(01) ao 86(Contador) e
+// passa para o próximo possível divisor]
+A2 20  LDA
+A3 86  Endereço
+A4 30  ADD
+A5 83  Endereço
+A6 80  JMP
+A7 92  Endereço
+//=================================================
+//[Calcula a POTENCIA]
+A8 20  LDA
+A9 86  Endereço
+AA 10  STA
+AB 50  Endereço
+AC 20  LDA
+AD 89  Endereço
+AE 10  STA
+AF 5A  Endereço
+B0 20  LDA
+B1 81  Endereço
+B2 80  JMP
+B3 5B  Endereço
+//=================================================
+//[Recebe o resultado da POTENCIA (AC), soma e salva
+// em 87(Somatorio)]
+B4 30  ADD
+B5 87  Endereço
+B6 10  STA
+B7 87  Endereço
+//=================================================
+//[Soma 83(01) em 86(Contador)]
+B8 20  LDA
+B9 86  Endereço
+BA 30  ADD
+BB 83  Endereço
+BC 10  LDA
+BD 86  Endereço
+//<================================================
+//[Soma NOT(86(Contador)) a 83(01) e 80(n)]
+BE 60  NOT
+BF 30  ADD
+C0 83  Endereço
+C1 30  ADD
+C2 80  Endereço
+//=================================================
+//[Se o resultado for negativo, salva 87(Somatorio)
+// em 82(Resultado) e finaliza]
+C3 90  JN
+C4 C7  Endereço
+C5 80  JMP
+C6 94  Endereço
+C7 20  LDA
+C8 87  Endereço
+C9 10  STA
+CA 82  Endereço
+CB F0  HLT

@@ -1,0 +1,113 @@
+;; 91 = temp_n
+;; 92 = ZERO
+;; 93 = UM
+
+;;Programa 1
+;;Salva o n em temp_n
+LDA(20) 82
+STA(10) 91
+;;Salva R como ZERO
+LDA(20) 92
+STA(10) 83
+;;Salva o A em S
+LDA(20) 80
+STA(10) 84
+;;Lê S 
+LDA(20) 84 - Linha 1 (0C)
+;;Rotaciona S com SHL e salva
+SHL(E1)
+STA(10) 84
+;;Lê R
+LDA(20) 83
+;;Rotaciona R com ROL e salva
+ROL(E3)
+STA(10) 83
+;;Lê temp_n
+LDA(20) 91
+;;Subtrai 1 DE temp_n
+SUB(70) 93
+;;Salva temp_n
+STA(10) 91
+;;temp_n > 0
+JZ(A0) Linha 2 (20)
+;;Continua multiplicação pela base
+JMP(80) Linha 1 (0C)
+
+;;Programa 2
+;;Salva o n em temp_n
+LDA(20) 82 - Linha 2 (20)
+STA(10) 91
+;;Salva N como ZERO
+LDA(20) 92
+STA(10) 86
+;;Salva o B em M
+LDA(20) 81
+STA(10) 85
+;;Lê M 
+LDA(20) 85 - Linha 3 (2C)
+;;Rotaciona M com SHR e salva
+SHR(E0)
+STA(10) 85
+;;Lê N
+LDA(20) 86
+;;Rotaciona N com ROR e salva
+ROR(E2)
+STA(10) 86
+;;Lê temp_n
+LDA(20) 91
+;;Subtrai 1 de temp_n
+SUB(70) 93
+;;Salva temp_n
+STA(10) 91
+;;temp_n > 0
+JZ(A0) Linha 4 (40)
+;;Continua multiplicação pela base
+JMP(80) Linha 3 (2C)
+
+;;Programa 3
+;;Lê S
+LDA(20) 84 - Linha 4 (40)
+;;Soma S + B
+ADD(30) 81
+;;Salva em V
+STA(10) 88
+;;Verifica se teve Carry
+JC(B0) Linha 5 (4A)
+JMP(80) Linha 6 (52)
+;;Soma R, A e 1
+LDA(20) 83 - Linha 5 (4A)
+ADD(30) 80
+ADD(30) 93
+JMP(80) Linha 7 (56)
+;;Soma R e A 
+LDA(20) 83 - Linha 6 (52)
+ADD(30) 80
+;;Salva em T
+STA(10) 87 - Linha 7 (56)
+
+;;Programa 4
+;;Lê N
+LDA(20) 86
+;;Subtrai N - A
+SUB(70) 80
+;;Salva em Y
+STA(10) 90
+;;Verifica se teve Borrow
+JB(B8) Linha 8 (62)
+JMP(80) Linha 9 (6A)
+;;Subtrai M - B - 1
+LDA(20) 85 - Linha 8 (62)
+SUB(70) 81
+SUB(70) 93
+JMP(80) Linha 10 ()
+;;Subtrai M - B 
+LDA(20) 85 - Linha 9 (6A)
+SUB(70) 81
+;;Salva em X
+STA(10) 89 - Linha 10 (6E)
+
+;;Fim
+HLT(F0)
+
+
+ 

@@ -1,0 +1,14 @@
+Programa 1) RS <- 2^n * A
+Programa 2) MN <- B / 2^n
+Programa 3) TV <- RS + AB
+Programa 4) XY <- MN - BA
+
+Endereços (Em Hexadecimal):
+R - End 83
+S - End 84
+M - End 85
+N - End 86
+T - End 87
+V - End 88
+X - End 89
+Y - End 90

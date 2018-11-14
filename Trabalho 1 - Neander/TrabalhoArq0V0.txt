@@ -1,0 +1,200 @@
+00  20 85   LDA 85
+02  30 83   ADD 83
+04  10 85   STA 85
+06  60      NOT
+07  30 83   ADD 83
+09  10 86   STA 86
+0B  20 80   LDA 80
+0D  30 86   ADD 86
+0F  90 6E   JN  6E
+11  A0 2C   JZ  2C
+13  20 85   LDA 85
+15  10 88   STA 88
+17  20 88   LDA 88
+19  30 85   ADD 85
+1B  10 88   STA 88
+1D  60      NOT
+1E  30 83   ADD 83
+20  10 86   STA 86
+22  20 80   LDA 80
+24  30 86   ADD 86
+26  A0 2C   JZ  2C
+28  90 00   JN  00
+2A  80 17   JMP 17
+2C  20 85   LDA 85
+2E  10 87   STA 87
+30  20 81   LDA 81
+32  A0 68   JZ  68
+34  10 8A   STA 8A
+36  20 87   LDA 87
+38  10 8B   STA 8B
+3A  20 8A   LDA 8A
+3C  30 84   ADD 84
+3E  A0 6F   JZ  6F
+40  10 8A   STA 8A
+42  20 87   LDA 87
+44  10 8C   STA 8C
+46  20 8B   LDA 8B
+48  10 8D   STA 8D
+4A  20 8C   LDA 8C
+4C  30 84   ADD 84
+4E  A0 62   JZ  62
+50  10 8C   STA 8C
+52  20 8D   LDA 8D
+54  30 8B   ADD 8B
+56  10 8D   STA 8D
+58  80 4A   JMP 4A
+5A  20 8D   LDA 8D
+5C  30 82   ADD 82
+5E  10 82   STA 82
+60  80 00   JMP 00
+62  20 8D   LDA 8D
+64  10 8B   STA 8B
+66  80 3A   JMP 3A
+68  20 83   LDA 83
+6A  10 8B   STA 8B
+6C  80 5C   JMP 5C
+6E  F0      HLT
+6F  20 8B   LDA 8B
+71  10 8D   STA 8D
+73  80 5A   JMP 5A
+75  00      NOP
+76  00      NOP
+77  00      NOP
+78  00      NOP
+79  00      NOP
+7A  00      NOP
+7B  00      NOP
+7C  00      NOP
+7D  00      NOP
+7E  00      NOP
+7F  00      NOP
+
+80  05     
+81  01     
+82  06     
+83  01     
+84  FF     
+85  06     
+86  FA     
+87  05     
+88  08     
+89  00     
+8A  01     
+8B  05     
+8C  00     
+8D  05     
+8E  00     
+8F  00     
+90  00     
+91  00     
+92  00     
+93  00     
+94  00     
+95  00     
+96  00     
+97  00     
+98  00     
+99  00     
+9A  00     
+9B  00     
+9C  00     
+9D  00     
+9E  00     
+9F  00     
+A0  00     
+A1  00     
+A2  00     
+A3  00     
+A4  00     
+A5  00     
+A6  00     
+A7  00     
+A8  00     
+A9  00     
+AA  00     
+AB  00     
+AC  00     
+AD  00     
+AE  00     
+AF  00     
+B0  00     
+B1  00     
+B2  00     
+B3  00     
+B4  00     
+B5  00     
+B6  00     
+B7  00     
+B8  00     
+B9  00     
+BA  00     
+BB  00     
+BC  00     
+BD  00     
+BE  00     
+BF  00     
+C0  00     
+C1  00     
+C2  00     
+C3  00     
+C4  00     
+C5  00     
+C6  00     
+C7  00     
+C8  00     
+C9  00     
+CA  00     
+CB  00     
+CC  00     
+CD  00     
+CE  00     
+CF  00     
+D0  00     
+D1  00     
+D2  00     
+D3  00     
+D4  00     
+D5  00     
+D6  00     
+D7  00     
+D8  00     
+D9  00     
+DA  00     
+DB  00     
+DC  00     
+DD  00     
+DE  00     
+DF  00     
+E0  00     
+E1  00     
+E2  00     
+E3  00     
+E4  00     
+E5  00     
+E6  00     
+E7  00     
+E8  00     
+E9  00     
+EA  00     
+EB  00     
+EC  00     
+ED  00     
+EE  00     
+EF  00     
+F0  00     
+F1  00     
+F2  00     
+F3  00     
+F4  00     
+F5  00     
+F6  00     
+F7  00     
+F8  00     
+F9  00     
+FA  00     
+FB  00     
+FC  00     
+FD  00     
+FE  00     
+FF  00     

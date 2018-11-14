@@ -1,0 +1,225 @@
+================================================
+Valores iniciais
+80 - n  Dividendo
+81 - x  Expoente
+82 - 00 Resultado
+83 - 01
+84 - FF (-1)
+85 - 00 Divisor
+86 - 00 SubtracaoProgressivaNegativa
+87 - 00 d
+88 - 00 SubtracaoProgressiva
+89 - 00 Potencia
+8A - 00 CountPotencia
+8B - 00 ResultadoPotencia
+8C - 00 CountMultiplicacao
+8D - 00 ResultadoMultiplicacao
+================================================
+================================================
+(Divisor ++)
+00 - 20 LDA
+01 - 85 End
+02 - 30 ADD
+03 - 83 End
+04 - 10 STA
+05 - 85 End
+<===============================================
+(SubtracaoProgressivaNegativa = Not(Divisor) + 1)
+06 - 60 NOT
+07 - 30 ADD
+08 - 83 End
+09 - 10 STA
+0A - 86 End
+================================================
+(n + SubtracaoProgressivaNegativa)
+0B - 20 LDA
+0C - 80 End
+0D - 30 ADD
+0E - 86 End
+<===============================================
+(Verifica se o divisor não passou o dividendo, caso sim finaliza)
+0F - 90 JN
+10 - 6E End
+<===============================================
+(Verifica se é divisor, se sim calcula a potencia)
+11 - A0 JZ
+12 - 2C End
+================================================
+(SubtracaoProgressiva = Divisor)
+13 - 20 LDA
+14 - 85 End - Divisor
+15 - 10 STA
+16 - 88 End - SubtracaoProgressiva
+================================================
+(SubtracaoProgressiva += Divisor)
+17 - 20 LDA
+18 - 88 End - SubtracaoProgressiva
+19 - 30 ADD
+1A - 85 End - Divisor
+1B - 10 STA
+1C - 88 End - SubtracaoProgressiva
+<===============================================
+(SubtracaoProgressivaNegativa = Not(SubtracaoProgressiva) + 1)
+1D - 60 NOT
+1E - 30 ADD
+1F - 83 End
+20 - 10 STA
+21 - 86 End
+<===============================================
+(n + SubtracaoProgressivaNegativa)
+22 - 20 LDA
+23 - 80 End
+24 - 30 ADD
+25 - 86 End
+<===============================================
+(Verifica se o resto é zero, caso sim, 
+faz a potencia do divisor pelo x e soma ao resultado final)
+26 - A0 JZ
+27 - 2C End
+<===============================================
+(Verifica se o resto é menor que zero, caso sim, 
+o número não é divisor e passa para a próxima progressão)
+28 - 90 JN 
+29 - 00 End
+================================================
+(Se não entrar em JN e JZ continua a subtração progressiva)
+2A - 80 JMP 
+2B - 17 End
+================================================
+(d = Divisor)
+2C - 20 LDA
+2D - 85 End
+2E - 10 STA
+2F - 87 End
+================================================
+(Lê o expoente e se for 0 considera o resultado 1)
+30 - 20 LDA
+31 - 81 End
+32 - A0 JZ
+33 - 68 End 
+<===============================================
+(Salva o expoente como CountPotencia)
+34 - 10 STA
+35 - 8A End
+================================================
+(ResultadoPotencia = d [Expoente = 1])
+36 - 20 LDA
+37 - 87 End 
+38 - 10 STA
+39 - 8B End
+================================================
+(CountPotencia --)
+3A - 20 LDA
+3B - 8A End
+3C - 30 ADD
+3D - 84 End
+<===============================================
+(Verifica se o CountPotencia está igual a zero parando a multiplicação)
+3E - A0 JZ
+3F - 6F End
+<==============================================
+(Salva CountPotencia)
+40 - 10 STA
+41 - 8A End - CountPotencia
+================================================
+(CountMultiplicacao = d)
+42 - 20 LDA
+43 - 87 End
+44 - 10 STA
+45 - 8C End
+================================================
+(ResultadoMultiplicacao = ResultadoPotencia)
+46 - 20 LDA
+47 - 8B End
+48 - 10 STA
+49 - 8D End
+================================================
+(CountMutiplicacao --)
+4A - 20 STA
+4B - 8C End
+4C - 30 ADD
+4D - 84 End
+<===============================================
+(Verifica se já não foram realizadas todas as multiplicações, 
+se sim salva o resultado potencia e passa para a próxima potência)
+4E - A0 JZ
+4F - 62 End 
+<===============================================
+(Salva CountMultiplicacao)
+50 - 10 STA
+51 - 8C End
+================================================
+(ResultadoMultipliacao += ResultadoPotencia)
+52 - 20 LDA
+53 - 8D End
+54 - 30 ADD
+55 - 8B End
+56 - 10 STA
+57 - 8D End
+================================================
+(Passa para a próxima soma da multiplicação)
+58 - 80 JMP
+59 - 4A End
+================================================
+(Resultado += ResultadoMultiplicacao)
+5A - 20 LDA 
+5B - 8D End - ResultadoMultiplicacao
+5C - 30 ADD
+5D - 82 End - Resultado
+5E - 10 STA
+5F - 82 End - Resultado
+60 - 80 JMP
+61 - 00 End
+================================================
+(ResultadoPotencia = ResultadoMultiplicacao)
+62 - 20 LDA
+63 - 8D End
+64 - 10 STA
+65 - 8B End
+================================================
+(Continua calculo potência para o próximo expoente)
+66 - 80 JMP
+67 - 3A End
+================================================
+(Salva resultado potencia igual a 1)
+68 - 20 LDA 
+69 - 83 End
+6A - 10 STA
+6B - 8B End
+6C - 80 JMP
+6D - 5C End
+================================================
+6E - F0 HLT
+================================================
+(ResultadoMultiplicacao = ResultadoPotencia)
+6F - 20 LDA
+70 - 8B End
+71 - 10 STA
+72 - 8D End
+73 - 80 JMP
+74 - 5A End
+================================================
+(Zerar variáveis e finalizar)
+90 - 20 LDA
+91 - 85 End
+92 - 10 STA
+93 - 82 End
+94 - 10 STA
+95 - 85 End
+95 - 10 STA
+96 - 86 End
+97 - 10 STA
+98 - 87 End
+99 - 10 STA
+9A - 88 End
+9B - 10 STA
+9C - 89 End
+9D - 10 STA
+9F - 8A End
+A0 - 10 STA
+A1 - 8B End
+A2 - 10 STA
+A3 - 8C End 
+A4 - 10 STA
+A5 - 8D End
+A6 - F0 HLT
