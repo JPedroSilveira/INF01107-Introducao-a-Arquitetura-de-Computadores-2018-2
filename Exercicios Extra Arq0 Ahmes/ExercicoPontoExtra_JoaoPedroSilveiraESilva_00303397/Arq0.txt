@@ -91,7 +91,7 @@ LDA(20) 86
 ;;Subtrai N - A
 SUB(70) 80
 ;;Salva em Y
-STA(10) 8A
+STA(10) 90
 ;;Verifica se teve Borrow
 JB(B8) Linha 8 (62)
 JMP(80) Linha 9 (6A)
