@@ -1,0 +1,170 @@
+ORG 128
+;VARIAVEIS
+VA: DB ;Entrada multiplicação
+VB: DB ;Entrada multiplicação
+VE: DB 2;Entrada expoente
+VBase: DB ;Entrada base
+VN: DB 120 ;Entrada
+VD: DB ;Tentativa divisor atual
+VDA: DB ;Ultima tentativa divisor
+VR: DB ;R_1 multiplicação mais significativo
+VS: DB ;R_2 multiplicação menos significativo
+VF_1: DB ;Resultado final menos significativo
+VF_2: DB ;Resultado final mais significativo
+Contador: DB ;Multiplicação
+Contador_Exp: DB ;Exponenciação 
+TEMP: DB ;Multipicação
+
+;CONSTANTES
+Cons0: DB 0
+Cons1: DB 1
+Cons8: DB 8
+
+ORG 0
+
+;;Zera resultado
+LDA Cons0
+STA VF_1
+STA VF_2
+
+;;Salva o número de entrada como tentativa divisor atual
+LDA VN
+STA VD
+STA VDA
+
+;;Verifica se a tentativa de divisor atual é divisor
+DIVISOR_POR_SUB_SUCESSIVA:
+	LDA VN
+	SUB VD
+	JZ COMECA_EXPONENCIACAO
+	JN PROXIMA_TENTATIVA
+	JP TENTA_NOVAMENTE
+	
+;;Tenta o próximo divisor	
+PROXIMA_TENTATIVA:
+	LDA VDA
+	SUB Cons1
+	JZ FIM
+	STA VD
+	STA VDA
+	JMP DIVISOR_POR_SUB_SUCESSIVA
+
+;;Tenta o mesmo divisor novamente somando com ele mesmo
+TENTA_NOVAMENTE:
+	LDA VD
+	ADD VDA
+	JC PROXIMA_TENTATIVA
+	STA VD
+	JMP DIVISOR_POR_SUB_SUCESSIVA	
+
+;;Inicia a exponenciação do divisor atual
+COMECA_EXPONENCIACAO:
+	LDA VDA
+	STA VBase
+	JMP EXPONENCIACAO_INIT
+
+TRATA_RESULTADO_EXPONENCIACAO:
+	LDA VS
+	ADD VF_1
+	STA VF_1
+	JC SOMA_UM_EM_VF_2
+	JMP TRATA_RESULTADO_EXPONENCIACAO_PT2
+
+TRATA_RESULTADO_EXPONENCIACAO_PT2:
+	LDA VR
+	ADD VF_2
+	STA VF_2
+	JMP PROXIMA_TENTATIVA
+	
+SOMA_UM_EM_VF_2:
+	LDA Cons1
+	ADD VF_2
+	STA VF_2
+	JMP TRATA_RESULTADO_EXPONENCIACAO_PT2
+
+;;INICIA EXPONENCIAÇÃO
+;;Salva o expoente no contador
+EXPONENCIACAO_INIT:
+	LDA VE 
+	JZ RETORNA_1_EXP ;;Se o expoente for Zero
+	SUB Cons1
+	JZ RETORNA_BASE
+	JMP POTENCIA_2
+
+;;RETORNA A BASE MULTIPLICADA POR ELA MESMA
+POTENCIA_2:
+	LDA VBase
+	STA VA
+	STA VB
+	JMP MULTIPLICACAO
+
+;;TRATA O RESULTADO DA POTENCIA_2
+POTENCIA_2_PT2:
+	JMP TRATA_RESULTADO_EXPONENCIACAO
+
+;;RETORNA A BASE COMO RESULTADO
+RETORNA_BASE:
+	LDA Cons0
+	STA VR
+	LDA VBase
+	STA VS
+	JMP TRATA_RESULTADO_EXPONENCIACAO
+
+;;SALVA O VALOR 1 NO RESULTADO DA EXPONENCIAÇÃO
+RETORNA_1_EXP:
+	LDA Cons0
+	STA VR
+	LDA Cons1
+	STA VS
+	JMP TRATA_RESULTADO_EXPONENCIACAO
+
+ORG 150
+	
+;;Inicia a convencional
+MULTIPLICACAO:
+	LDA Cons0 ;;ZERA RESULTADO
+	STA VR
+	STA VS
+	LDA VA ;;EVITA MULTIPLICAÇÃO POR ZERO
+	JZ POTENCIA_2_PT2
+	LDA VB
+	JZ POTENCIA_2_PT2
+	LDA Cons8 ;;Salva 8 no contador
+	STA Contador 
+	LDA VB ;;Salva B em TEMP
+	STA TEMP
+
+;;Valida o contador
+VALIDA_CONTADOR:
+	LDA Contador
+	JZ POTENCIA_2_PT2
+	JMP SOMAS_CONVENCIONAL_PARTE_1
+
+;;Realiza o deslocamento
+SOMAS_CONVENCIONAL_PARTE_1:
+	LDA TEMP
+	ROR
+	STA TEMP
+	JC SOMA_A_EM_R
+
+;;Realiza a rotação
+SOMAS_CONVENCIONAL_PARTE_2:
+	LDA VR
+	ROR 
+	STA VR
+	LDA VS
+	ROR 
+	STA VS
+	LDA Contador ;;Decrementa contador
+	SUB Cons1
+	STA Contador
+	JMP VALIDA_CONTADOR	
+
+SOMA_A_EM_R:
+	LDA VR
+	ADD VA
+	STA VR
+	JMP SOMAS_CONVENCIONAL_PARTE_2
+;; FINALIZA PROGRAMA
+FIM:
+	HLT

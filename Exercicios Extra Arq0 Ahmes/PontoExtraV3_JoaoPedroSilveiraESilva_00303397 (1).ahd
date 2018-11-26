@@ -1,0 +1,106 @@
+ORG 128
+;VARIAVEIS
+VA: DB
+VB: DB
+VM: DB
+VN: DB
+VR: DB
+VS: DB
+Contador: DB
+TEMP: DB
+
+;CONSTANTES
+ConsO: DB 0
+Cons1: DB 1
+Cons8: DB 8
+
+ORG 0
+
+;Salva A em N
+LDA VA
+STA VN
+
+;Salva B em contador
+LDA VB
+STA Contador
+
+;Zera VM
+LDA ConsO
+STA VM
+;Zera VN
+STA VN
+;Zera VR
+STA VR
+;Zera VS
+STA VS
+
+;;EVITA MULTIPLICAÇÃO POR ZERO
+LDA VA
+JZ FIM
+LDA VB
+JZ FIM
+
+;Soma em MN o valor de A Contador Vezes
+SOMA_SUCESSIVA:
+	LDA VN
+	ADD VA
+	STA VN
+	JC SOMA_M
+	JMP SOMA_SUCESSIVA_PT2
+
+;;Decrementa o contador e caso necessite, volta a somar
+SOMA_SUCESSIVA_PT2:
+	LDA Contador
+	SUB Cons1
+	STA Contador
+	JZ CONVENCIONAL
+	JMP SOMA_SUCESSIVA
+
+;;Soma um ao valor de M
+SOMA_M:
+	LDA VM
+	ADD Cons1
+	STA VM
+	JMP SOMA_SUCESSIVA_PT2
+	
+;;Inicia a convencional
+CONVENCIONAL:
+	LDA Cons8 ;;Salva 8 no contador
+	STA Contador 
+	LDA VB ;;Salva B em TEMP
+	STA TEMP
+
+;;Valida o contador
+VALIDA_CONTADOR:
+	LDA Contador
+	JZ FIM
+	JMP SOMAS_CONVENCIONAL_PARTE_1
+
+;;Realiza o deslocamento
+SOMAS_CONVENCIONAL_PARTE_1:
+	LDA TEMP
+	ROR
+	STA TEMP
+	JC SOMA_A_EM_R
+
+;;Realiza a rotação
+SOMAS_CONVENCIONAL_PARTE_2:
+	LDA VR
+	ROR 
+	STA VR
+	LDA VS
+	ROR 
+	STA VS
+	LDA Contador ;;Decrementa contador
+	SUB Cons1
+	STA Contador
+	JMP VALIDA_CONTADOR	
+
+SOMA_A_EM_R:
+	LDA VR
+	ADD VA
+	STA VR
+	JMP SOMAS_CONVENCIONAL_PARTE_2
+;; FINALIZA PROGRAMA
+FIM:
+	HLT
