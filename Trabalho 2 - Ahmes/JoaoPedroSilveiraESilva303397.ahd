@@ -1,16 +1,18 @@
+;;Nome: João Pedro Silveira e Silva, cartão 00303397
+
 ORG 128
 ;VARIAVEIS
+VN: DB ;Entrada 'n'
+VE: DB ;Entrada expoente 'x'
+VF_2: DB ;Resultado final mais significativo
+VF_1: DB ;Resultado final menos significativo
 VA: DB ;Entrada multiplicação
 VB: DB ;Entrada multiplicação
-VE: DB 2;Entrada expoente
 VBase: DB ;Entrada base
-VN: DB 120 ;Entrada
 VD: DB ;Tentativa divisor atual
 VDA: DB ;Ultima tentativa divisor
 VR: DB ;R_1 multiplicação mais significativo
 VS: DB ;R_2 multiplicação menos significativo
-VF_1: DB ;Resultado final menos significativo
-VF_2: DB ;Resultado final mais significativo
 Contador: DB ;Multiplicação
 Contador_Exp: DB ;Exponenciação 
 TEMP: DB ;Multipicação
