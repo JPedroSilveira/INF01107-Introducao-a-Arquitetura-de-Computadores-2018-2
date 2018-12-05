@@ -1,0 +1,110 @@
+ORG 128 ;;Espaço para definições
+
+;;----------------------------------------------------------------
+;Definição de variáveis
+msDiv: DB 0 ;Bits mais significativos do dividendo
+lsDiv: DB 0 ;Bits menos significativos do dividendo
+divisor: DB 0 ;Valor de entrada do divisor
+lsDivTemp: DB 0 ;Bits menos significativos do dividendo 
+		;temporário, armazenará o quociente do 
+		;resultado
+msDivTemp: DB 0 ;Bits mais significativos do dividendo 
+		;temporário, armazenará o resto do 
+		;resultado
+estado: DB 0 ;Armazena: 
+	       ;-1 para erro por overflow; 
+	       ;0 para divisão por zero;
+	       ;1 para resultado normal.
+contador: DB 0 ;Contador para as progressões de divisão
+;;----------------------------------------------------------------
+;Definição de constantes
+ZERO: DB 0
+UM: DB 1
+MENOS_UM: DB -1
+OITO: DB 8
+;;----------------------------------------------------------------
+;;----------------------------------------------------------------
+
+ORG 0 ;;Inicio do programa
+;;----------------------------------------------------------------
+;Lê o divisor e válida se não é ZERO
+LDA divisor
+JZ DivPorZero
+;Desloca os bits menos significantes do dividendo 
+;para a esquerda e salva o resultado no dividendo 
+;menos significativo temporário
+LDA lsDiv 
+SHL
+STA lsDivTemp 
+;Rotaciona o byte mais significativo do dividendo
+;para a esquerda e salva o resultado no dividendo
+;mais significativo temporário
+LDA msDiv 
+ROL
+STA msDivTemp
+;Calcula DividendoTemporárioDeslocado - Divisor
+SUB divisor 
+JP Overflow;Neste caso o bity mais significativo
+	   ;do dividendo já deslocado é maior 
+	   ;que o divisor, resultado em Overflow
+;Caso não dê Overflow inicializa o contador e começa 
+;a progressão da divisão.
+LDA OITO
+STA contador
+;;----------------------------------------------------------------
+RepeticaoDivisao:
+	;Substrai o dividendo mais significativo pelo 
+	;divisor
+	LDA msDivTemp
+	SUB divisor
+	;Caso o resultado de negativo deve "adicionar"
+	;ZERO no quociente
+	JN ContinuaRepeticao
+	;Caso não dê negativo então salva o deslocamento 
+	;em msDivTemp e adiciona 1 ao bit menos 
+	;significativo do quociente (lsDivTemp)
+	STA msDivTemp
+	LDA lsDivTemp
+	OR UM ;;Faz o bit menos significativo ser 1
+	STA lsDivTemp
+	
+ContinuaRepeticao:
+	;Decrementa o contador
+	LDA contador
+	SUB UM
+	STA contador
+	;Em caso de contador ZERADO o programa já realizou 
+	;as oito etapas e deve finalizar
+	JZ FinalizarComSucesso
+	;Se o contador ainda não finalizou, então continua
+	;deslocando o byte menos siginificativo do divisor
+	;temporário e rotacionando o mais significativo,
+	;ambos para a esquerda.
+	LDA lsDivTemp
+	SHL
+	STA lsDivTemp ;Salva resultado
+	LDA msDivTemp 
+	ROL
+	STA msDivTemp ;Salva resultado
+	JMP RepeticaoDivisao ;Continua o laço de progressão
+;;----------------------------------------------------------------
+;Salva o estado como o AC atual e finaliza
+SalvaEstado:
+	STA estado
+	HLT
+;;----------------------------------------------------------------
+;Trata o caso de finalização normal do programa
+FinalizarComSucesso:
+	LDA UM
+	JMP SalvaEstado
+;;----------------------------------------------------------------
+;Trata o caso de Overflow na divisão
+Overflow:
+	LDA MENOS_UM
+	JMP SalvaEstado
+;;----------------------------------------------------------------
+;Trata o caso de divisão por ZERO
+DivPorZero:
+	LDA ZERO
+	JMP SalvaEstado
+;;----------------------------------------------------------------

@@ -1,0 +1,161 @@
+ORG 128
+int: DB 4
+A: DB 108
+B: DB 56
+R: DB
+S: DB
+T: DB
+V: DB
+Y: DB
+Z: DB
+X: DB
+TZ: DB
+TY: DB
+intf: DB
+intc: DB
+cont1: DB 1
+cont0: DB 0
+cont8: DB 8
+contMN: DB 255
+
+ORG 0
+
+LDA cont0
+STA S
+STA V
+LDA cont8
+STA intf
+
+INICIALIZA_A:
+	LDA int ;;Salva int em contador
+	STA intc
+	LDA A ;;Salva A em S
+	STA S
+	JN ADICIONA_MASCARA_NEGATIVA_R
+	JMP ADICIONA_MASCARA_POSITIVA_R
+
+ADICIONA_MASCARA_NEGATIVA_R:
+	LDA contMN ;;Adiciona máscara 11111111 em R
+	STA R
+	JMP EXPANDE_A_EM_RS
+
+ADICIONA_MASCARA_POSITIVA_R:
+	LDA cont0 ;;Adiciona máscara 00000000 em R
+	STA R
+	JMP EXPANDE_A_EM_RS
+
+EXPANDE_A_EM_RS:
+	LDA intc ;;Lê contador
+	JZ INICIALIZA_B ;;Se for negativo para
+	LDA S ;;Rotaciona S SHL
+	SHL
+	STA S
+	LDA R ;;Rotaciona R com ROL, salvando o carry da rotação de S
+	ROL
+	STA R
+	LDA intc ;;Subtrai 1 do contador
+	SUB cont1
+	STA intc
+	JMP EXPANDE_A_EM_RS ;;Continua a expansão
+
+INICIALIZA_B:
+	LDA int ;;Salva int em contador
+	STA intc
+	LDA B
+	STA V
+	JN ADICIONA_MASCARA_NEGATIVA_T
+	JMP ADICIONA_MASCARA_POSITIVA_T
+
+ADICIONA_MASCARA_NEGATIVA_T:
+	LDA contMN ;;Adiciona máscara 10000000 em T
+	STA T
+	JMP EXPANDE_B_EM_TV
+
+ADICIONA_MASCARA_POSITIVA_T:
+	LDA cont0 ;;Adiciona máscara 00000000 em T
+	STA T
+	JMP EXPANDE_B_EM_TV
+
+EXPANDE_B_EM_TV:
+	LDA intc ;;Lê contador
+	JZ SOMA_S_E_V ;;Se for negativo para
+	LDA V ;;Rotaciona V SHL
+	SHL
+	STA V
+	LDA T ;;Rotaciona T com ROL, salvando o carry da rotação de V
+	ROL
+	STA T
+	LDA intc ;;Subtrai 1 do contador
+	SUB cont1
+	STA intc
+	JMP EXPANDE_B_EM_TV ;;Continua a expansão
+
+SOMA_S_E_V: 
+	LDA S ;;Soma S e V salvando em Z
+	ADD V
+	STA Z
+	STA TZ
+	JC SOMA_1_EM_R ;;Caso de carry na soma
+	JMP SOMA_T_EM_R
+
+SOMA_1_EM_R: 
+	LDA R ;;Adiciona +1 em R
+	ADD cont1
+	STA R
+	JMP SOMA_T_EM_R
+
+ORG 150
+
+SOMA_T_EM_R:
+	LDA R ;;Soma T em R salvando em Y
+	ADD T
+	STA Y
+	STA TY
+	JMP REDUCAO_POR_ARREDONDAMENTO
+
+REDUCAO_POR_ARREDONDAMENTO:
+	LDA Y 
+	JN REDUCAO_POR_ARREDONDAMENTO_NEGATIVO
+	JMP REDUCAO_POR_ARREDONDAMENTO_POSITIVO
+
+REDUCAO_POR_ARREDONDAMENTO_NEGATIVO:
+	LDA intf ;;Subtrai 1 do intf 
+	SUB cont1
+	STA intf
+	LDA Z
+	SHL 
+	STA Z
+	LDA Y
+	ROL 
+	JC REDUCAO_POR_ARREDONDAMENTO_NEGATIVO_COM_CARRY ;;Salva em Y e continua rotação ;;JN não funcionando
+	JMP FIM ;;Termina rotação
+
+REDUCAO_POR_ARREDONDAMENTO_NEGATIVO_COM_CARRY:
+	STA Y ;;Salva deslocamento em Y e continua rotacionando
+	JMP REDUCAO_POR_ARREDONDAMENTO_NEGATIVO
+
+REDUCAO_POR_ARREDONDAMENTO_POSITIVO:
+	LDA Z
+	SHL 
+	STA Z
+	LDA Y
+	ROL 
+	JC FIM ;;Termina rotação ;;JN não funcionando
+	STA Y ;;Salva deslocamento em Y e continua rotacionando
+	LDA intf ;;Subtrai 1 do intf 
+	SUB cont1
+	STA intf
+	JMP REDUCAO_POR_ARREDONDAMENTO_POSITIVO
+	
+FIM:
+	LDA Y
+	SHR
+	STA X
+	LDA intf ;;Compensa 1 intf
+	ADD cont1
+	STA intf
+	HLT
+
+	
+	
+	
