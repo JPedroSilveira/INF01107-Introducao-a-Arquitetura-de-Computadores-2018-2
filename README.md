@@ -1,1 +1,3 @@
-Exercícios desenvolvidos durante a disciplina Introduçãoo a Arquitetura de Computadores (INF-UFRGS).
+# Introduçãoo a Arquitetura de Computadores
+### Semestre: 2019/2
+#### Professor: Renato Peres Ribas
